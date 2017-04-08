@@ -2,7 +2,8 @@
 // http://parse.sfm8.hackreactor.com/
 var app = {
   server: 'http://parse.sfm8.hackreactor.com/chatterbox/classes/messages',
-  roomsCollector: []
+  roomsCollector: [],
+  room: 'lobby'
 };
 
 app.init = function() {
@@ -27,14 +28,14 @@ app.send = function(data) {
   });
 };
 
-app.fetch = function(data) {
+app.fetch = function(chatRoomName) {
   $.ajax({
     // This is the url you should use to communicate with the parse API server.
     url: app.server,
     type: 'GET',
     // data: JSON.stringify(data),
     data: {
-      limit: 10,
+      limit: 100,
       order: '-updatedAt'
     },
     dataType: 'json',
@@ -42,10 +43,20 @@ app.fetch = function(data) {
     success: function (data) {
       var user = data.results;
       var index = user.length - 1;
-      console.log(user);
+      // console.log(user);
 
       while (index >= 0) {
-        app.renderMessage(user[index]);
+
+        if (chatRoomName === undefined) {
+          if (user[index].roomname === app.room) { // Default case... use lobby
+            app.renderMessage(user[index]);          
+          }
+        } else if (chatRoomName) {
+          if (user[index].roomname === chatRoomName) {
+            app.renderMessage(user[index]);
+          }
+        }
+        app.renderRoom(user[index].roomname);
         index -= 1;
       }
       
@@ -64,12 +75,15 @@ app.clearMessages = function() {
 };
 
 app.renderMessage = function(message) {
-  var userName = message.username;
-  var userText = message.text;
-  var userRoomName = message.roomname;
-  var userObjID = message.objectId;
-  var userCreated = message.updatedAt;
-  $('#chats').prepend('<p class="username">' + userName + ': ' + userText + '</p><br>');
+  var userName = app.sanitize(message.username);
+  var userText = app.sanitize(message.text);
+  var userRoomName = app.sanitize(message.roomname);
+  var userObjID = app.sanitize(message.objectId);
+  var userCreated = app.sanitize(message.updatedAt);
+  var $chats = $('#chats');
+
+
+  $chats.prepend('<p class="username ' + userRoomName + '">' + userRoomName + ': ' + userName + ': ' + userText + '</p><br>');
   app.renderRoom(userRoomName);  
 };
 
@@ -81,6 +95,21 @@ app.renderRoom = function(location) {
 
   }
 };
+
+app.sanitize = function(value) {
+  var lt = /</g, 
+      gt = />/g, 
+      ap = /'/g, 
+      ic = /"/g;
+
+  if (value === undefined) {
+    return ''
+  }
+
+  return value.toString().replace(lt, "&lt;").replace(gt, "&gt;").replace(ap, "&#39;").replace(ic, "&#34;");
+}
+
+
 
 
 app.handleUsernameClick = function() {
@@ -106,12 +135,20 @@ $(document).ready(function() {
       roomname: 'lobby'
     };
     app.send(myMessage);
-
     app.fetch();
   });
 
   // Select a lobby
-  
+  $('#chat-rooms').change(function(data) {
+    var roomChoice = $('#chat-rooms').find(':selected').text();
+    // console.log(app.server + '/' + roomChoice);
+    app.clearMessages();
+    app.fetch(roomChoice);
+    // $('#chats > :not(.' + !roomChoice + ')').toggle();
+
+    // console.log(roomChoice);
+  })
+  // hide
 
   // Refresh button here
   setInterval(function() {
