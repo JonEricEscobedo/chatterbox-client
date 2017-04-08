@@ -8,7 +8,8 @@
     <!-- dependencies -->
     <script src="bower_components/jquery/dist/jquery.js"></script>
     <script src="bower_components/underscore/underscore.js"></script>
-    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+
     <script>
       // YOU DO NOT NEED TO EDIT THIS CODE
       if (!/(&|\?)username=/.test(window.location.search)) {
@@ -26,21 +27,21 @@
   </head>
   <body>
     <div id="main">
-      <h1>chatterbox</h1>
+      <h1>Chatterbox!</h1>
       <!-- Your HTML goes here! -->
 
       <div id="roomSelect">
-        <p>Room: </p>
         <form action="/action_page.php">
-          <select name="rooms" id="chat-rooms">
+        <p>Room: </p>
+          <select name="rooms" class="form-control" id="chat-rooms">
             <option value="new-room">New Room...</option>
           </select>
         </form>
       </div>
 
       <form>
-        <input type="text" name="chat-message" placeholder="Type your message here..." id="message">
-        <input type="button" name="chat-submit" class="submit" value="Submit" id="send">
+        <input type="text" class="form-control" name="chat-message" placeholder="Type your message here..." id="message">
+        <input type="button" name="chat-submit" class="submit btn btn-primary" value="Submit" id="send">
       </form>
 
     </div>

@@ -86,7 +86,7 @@ app.renderMessage = function(message) {
   var $chats = $('#chats');
 
 
-  $chats.prepend('<p class="chat username ' + userName + '" data-username="' + userName + '">' + userRoomName + ': ' + userName + ': ' + userText + '</p>');
+  $chats.prepend('<p class="chat username ' + userName + '" data-username="' + userName + '">' + userName + ': ' + userText + '</p>');
   app.renderRoom(userRoomName);  
 };
 
