@@ -21,7 +21,7 @@ app.send = function(data) {
     contentType: 'application/json',
     success: function (data) {
       console.log('chatterbox: Message sent', data);
-
+      app.fetch();
     },
     error: function (data) {
       // See: https://developer.mozilla.org/en-US/docs/Web/API/console.error
