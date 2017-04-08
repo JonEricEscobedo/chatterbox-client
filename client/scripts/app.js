@@ -2,6 +2,7 @@
 // http://parse.sfm8.hackreactor.com/
 var app = {
   server: 'http://parse.sfm8.hackreactor.com/chatterbox/classes/messages',
+  // server: 'http://parse.sfm8.hackreactor.com/chatterbox/classes/lobby',
   roomsCollector: [],
   room: 'lobby'
 };
@@ -35,7 +36,7 @@ app.fetch = function(chatRoomName) {
     type: 'GET',
     // data: JSON.stringify(data),
     data: {
-      limit: 100,
+      limit: 500,
       order: '-updatedAt'
     },
     dataType: 'json',
@@ -148,23 +149,52 @@ $(document).ready(function() {
   // Get user name
   var myName = this.location.search.slice(10);
 
-  // Send a chat message
+  // Send a chat message on button click
   $('#send').on('click', function() {
     var myText = $('#message').val();
     var myMessage = {
       username: myName,
       text: myText,
-      roomname: 'lobby'
+      roomname: app.room
     };
     app.send(myMessage);
     app.fetch();
   });
 
+  // Send a chat message on enter press
+  $('#send').keypress(function (e) {
+   var key = e.which;
+   if(key == 13)  // the enter key code
+    {
+      var myText = $('#message').val();
+      var myMessage = {
+        username: myName,
+        text: myText,
+        roomname: app.room
+      };
+      app.send(myMessage);
+      app.fetch();
+    }
+  });   
+
+
   // Select a lobby
   $('#chat-rooms').change(function(data) {
     var roomChoice = $('#chat-rooms').find(':selected').text();
-    app.clearMessages();
-    app.fetch(roomChoice);
+    if (roomChoice === 'New Room...') {
+      // Create pop up
+      var roomCreator = prompt("Name your new room!");
+      app.renderRoom(roomCreator)
+      app.clearMessages();
+      app.fetch(roomCreator);
+      app.room = roomCreator;
+      // Push to room collector
+      // ...and go to that room
+    } else {
+      app.clearMessages();
+      app.fetch(roomChoice);
+      app.room = roomChoice;
+    }
   });
 
   // Add friend attribute - highlight all 'friend' messages
@@ -172,10 +202,10 @@ $(document).ready(function() {
 
 
   // Auto refresh on a 10 second interval
-  // setInterval(function() {
-  //   app.clearMessages();
-  //   app.fetch();
-  // }, 10000);
+  setInterval(function() {
+    app.clearMessages();
+    app.fetch();
+  }, 10000);
 
 });
 
