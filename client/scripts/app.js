@@ -121,14 +121,7 @@ app.sanitize = function(value) {
 
 app.handleUsernameClick = function() {
   var myFriend = $(this).data('username');
-  
-  // if (!$(this).hasClass('friend')) {
-  //   $(this).addClass('friend');
-  //   $('.' + myFriend).addClass('friend')
-  // } else {
-  //   $(this).removeClass('friend');
-  //   $('.' + myFriend).removeClass('friend');
-  // }
+
   if (!$('.' + myFriend).hasClass('friend')) {
     $('.' + myFriend).addClass('friend').css('font-weight', 'bold');
   } else {
@@ -138,13 +131,17 @@ app.handleUsernameClick = function() {
 };
 
 app.handleSubmit = function() {
-
+ 
 };
 
 
 $(document).ready(function() {
   // Load page with first fetch of chats
   app.fetch();
+
+  $(function() {
+    $("form").submit(function() { return false; });
+  }); 
 
   // Get user name
   var myName = this.location.search.slice(10);
@@ -157,25 +154,13 @@ $(document).ready(function() {
       text: myText,
       roomname: app.room
     };
+    // location.reload(true);
     app.send(myMessage);
     app.fetch();
   });
 
   // Send a chat message on enter press
-  $('#send').keypress(function (e) {
-   var key = e.which;
-   if(key == 13)  // the enter key code
-    {
-      var myText = $('#message').val();
-      var myMessage = {
-        username: myName,
-        text: myText,
-        roomname: app.room
-      };
-      app.send(myMessage);
-      app.fetch();
-    }
-  });   
+  // Implement later...
 
 
   // Select a lobby
@@ -188,8 +173,6 @@ $(document).ready(function() {
       app.clearMessages();
       app.fetch(roomCreator);
       app.room = roomCreator;
-      // Push to room collector
-      // ...and go to that room
     } else {
       app.clearMessages();
       app.fetch(roomChoice);
