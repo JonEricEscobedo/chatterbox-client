@@ -7,7 +7,7 @@ var app = {
 };
 
 app.init = function() {
-  $('.username').on('click', app.handleUsernameClick());
+  
   $('#send').on('click', app.handleSubmit());
 };
 
@@ -56,7 +56,9 @@ app.fetch = function(chatRoomName) {
             app.renderMessage(user[index]);
           }
         }
-        app.renderRoom(user[index].roomname);
+        
+          app.renderRoom(user[index].roomname);
+        
         index -= 1;
       }
       
@@ -83,7 +85,7 @@ app.renderMessage = function(message) {
   var $chats = $('#chats');
 
 
-  $chats.prepend('<p class="username ' + userRoomName + '">' + userRoomName + ': ' + userName + ': ' + userText + '</p><br>');
+  $chats.prepend('<p class="chat username ' + userName + '" data-username="' + userName + '">' + userRoomName + ': ' + userName + ': ' + userText + '</p>');
   app.renderRoom(userRoomName);  
 };
 
@@ -91,7 +93,11 @@ app.renderMessage = function(message) {
 app.renderRoom = function(location) {
   if (!_.contains(app.roomsCollector, location)) {
     app.roomsCollector.push(location);
-    $('#roomSelect').find('#chat-rooms').append('<option value="' + location + '">' + location + '</options>');
+    if (location === 'lobby') {
+      $('#roomSelect').find('#chat-rooms').append('<option selected="selected" value="' + location + '">' + location + '</options>');
+    } else {
+      $('#roomSelect').find('#chat-rooms').append('<option value="' + location + '">' + location + '</options>');
+    }
 
   }
 };
@@ -113,6 +119,20 @@ app.sanitize = function(value) {
 
 
 app.handleUsernameClick = function() {
+  var myFriend = $(this).data('username');
+  
+  // if (!$(this).hasClass('friend')) {
+  //   $(this).addClass('friend');
+  //   $('.' + myFriend).addClass('friend')
+  // } else {
+  //   $(this).removeClass('friend');
+  //   $('.' + myFriend).removeClass('friend');
+  // }
+  if (!$('.' + myFriend).hasClass('friend')) {
+    $('.' + myFriend).addClass('friend').css('font-weight', 'bold');
+  } else {
+    $('.' + myFriend).removeClass('friend').css('font-weight', 'normal');
+  }
 
 };
 
@@ -122,8 +142,10 @@ app.handleSubmit = function() {
 
 
 $(document).ready(function() {
+  // Load page with first fetch of chats
   app.fetch();
 
+  // Get user name
   var myName = this.location.search.slice(10);
 
   // Send a chat message
@@ -141,22 +163,19 @@ $(document).ready(function() {
   // Select a lobby
   $('#chat-rooms').change(function(data) {
     var roomChoice = $('#chat-rooms').find(':selected').text();
-    // console.log(app.server + '/' + roomChoice);
     app.clearMessages();
     app.fetch(roomChoice);
-    // $('#chats > :not(.' + !roomChoice + ')').toggle();
+  });
 
-    // console.log(roomChoice);
-  })
-  // hide
+  // Add friend attribute - highlight all 'friend' messages
+  $(this).on('click', '.username', app.handleUsernameClick);
 
-  // Refresh button here
-  setInterval(function() {
-    app.clearMessages();
-    app.fetch();
-    window.scrollTo(0, 0);
-  }, 10000);
 
+  // Auto refresh on a 10 second interval
+  // setInterval(function() {
+  //   app.clearMessages();
+  //   app.fetch();
+  // }, 10000);
 
 });
 
