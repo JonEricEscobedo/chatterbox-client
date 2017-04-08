@@ -5,7 +5,8 @@ var app = {
 };
 
 app.init = function() {
-
+  $('.username').on('click', app.handleUsernameClick());
+  $('#send').on('click', app.handleSubmit());
 };
 
 app.send = function(data) {
@@ -33,7 +34,7 @@ app.fetch = function(data) {
     data: JSON.stringify(data),
     contentType: 'application/json',
     success: function (data) {
-      console.log('chatterbox: Message sent');
+      console.log(data);
     },
     error: function (data) {
       // See: https://developer.mozilla.org/en-US/docs/Web/API/console.error
@@ -51,7 +52,6 @@ app.renderMessage = function(message) {
   var userText = message.text;
   var userRoomName = message.roomname;
 
-  // $('#chats').append("<p>" + userText + "</p>");
   $('#chats').append('<p class="username">' + userName + ': ' + userText + '</p>');
 };
 
@@ -60,12 +60,12 @@ app.renderRoom = function(location) {
 };
 
 
-app.handleUserNameClick = function() {
-  console.log('yo');
-  return true;
+app.handleUsernameClick = function() {
+
 };
 
-$(document).ready(function() {
-  $('.username').on('click', app.handleUserNameClick());
-});
+app.handleSubmit = function() {
+
+};
+
 
