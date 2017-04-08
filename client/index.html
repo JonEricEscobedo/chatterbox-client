@@ -28,12 +28,23 @@
     <div id="main">
       <h1>chatterbox</h1>
       <!-- Your HTML goes here! -->
-      <div id="roomSelect"></div>
+
+      <div id="roomSelect">
+        <p>Room: </p>
+        <form action="/action_page.php">
+          <select name="rooms" id="chat-rooms">
+          </select>
+        </form>
+      </div>
+
       <form>
         <input type="text" name="chat-message" id="message">
         <input type="button" name="chat-submit" class="submit" value="Submit" id="send">
       </form>
+
     </div>
-      <div id="chats"></div>
+      <div id="chats">
+        
+      </div>
   </body>
 </html>

@@ -1,7 +1,9 @@
 // YOUR CODE HERE:
 // http://parse.sfm8.hackreactor.com/
 var app = {
-  server: 'http://parse.sfm8.hackreactor.com/chatterbox/classes/messages'
+  server: 'http://parse.sfm8.hackreactor.com/chatterbox/classes/messages',
+  roomsCollector: []
+  //userData: {}
 };
 
 app.init = function() {
@@ -10,6 +12,7 @@ app.init = function() {
 };
 
 app.send = function(data) {
+
   $.ajax({
     // This is the url you should use to communicate with the parse API server.
     url: app.server,
@@ -34,7 +37,10 @@ app.fetch = function(data) {
     data: JSON.stringify(data),
     contentType: 'application/json',
     success: function (data) {
-      console.log(data);
+      var user = data.results;
+      for (var i = 0; i < user.length; i++) {
+        app.renderMessage(user[i]);
+      }
     },
     error: function (data) {
       // See: https://developer.mozilla.org/en-US/docs/Web/API/console.error
@@ -51,12 +57,18 @@ app.renderMessage = function(message) {
   var userName = message.username;
   var userText = message.text;
   var userRoomName = message.roomname;
-
-  $('#chats').append('<p class="username">' + userName + ': ' + userText + '</p>');
+  $('#chats').append('<p class="username">' + userName + ': ' + userText + '</p><br>');
+  
+  app.renderRoom(userRoomName);  
 };
 
+
 app.renderRoom = function(location) {
-  $('#roomSelect').append('<p>' + location + '</p>');
+  // $('#roomSelect').append('<p>' + location + '</p>');
+  if (!_.contains(app.roomsCollector, location)) {
+    app.roomsCollector.push(location);
+    $('#roomSelect').find('#chat-rooms').append('<option value="' + location + '">' + location + '</options>');
+  }
 };
 
 
@@ -69,3 +81,9 @@ app.handleSubmit = function() {
 };
 
 
+$(document).ready(function() {
+  app.fetch();
+  var myName = this.location.search.slice(10);
+
+
+});
