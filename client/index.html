@@ -3,13 +3,15 @@
   <head>
     <meta charset="utf-8">
     <title>chatterbox</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
     <link rel="stylesheet" href="styles/styles.css">
+    <link href="https://fonts.googleapis.com/css?family=Raleway:400,800" rel="stylesheet">
 
     <!-- dependencies -->
     <script src="bower_components/jquery/dist/jquery.js"></script>
     <script src="bower_components/underscore/underscore.js"></script>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-timeago/1.5.4/jquery.timeago.js"></script>
     <script>
       // YOU DO NOT NEED TO EDIT THIS CODE
       if (!/(&|\?)username=/.test(window.location.search)) {
@@ -25,30 +27,28 @@
     <script src="env/config.js"></script>
     <script src="scripts/app.js"></script>
   </head>
-  <body>
-    <div id="main">
-      <h1>Chatterbox!</h1>
-      <!-- Your HTML goes here! -->
 
-      <div id="roomSelect">
-        <form action="/action_page.php">
-        <p>Room: </p>
-          <select name="rooms" class="form-control" id="chat-rooms">
-            <option value="new-room">New Room...</option>
-          </select>
+  <body>
+    <div class="container">
+      <!-- Main div -->
+      <div id="main">
+        <h1>chatterbox</h1>
+        <h6>a 21st century chat client.</h6>
+        <select id="roomSelect">
+          <option value="newroom">New room...</option>
+        </select>
+        <form action="#" id="send">
+          <input type="text" name="message" id="message" placeholder="Start chatting!"</input>
+          <input type="submit" name="submit" class="submit btn btn-primary"</input>
         </form>
       </div>
 
-      <form>
-        <input type="text" class="form-control" name="chat-message" placeholder="Type your message here..." id="message">
-        <input type="button" name="chat-submit" class="submit btn btn-primary" value="Submit" id="send">
-      </form>
-
-    </div>
+      <!-- Chat div -->
       <div id="chats">
         
       </div>
+    </div>
+    <script>app.init();</script>
   </body>
-</html>
 
-<!-- <script>$('body').css('background', 'black')</script> -->
+</html>
